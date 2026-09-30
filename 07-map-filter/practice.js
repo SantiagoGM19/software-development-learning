@@ -24,3 +24,12 @@ filterLongWords(["cat", "dog", "elephant", "fish"], 4)
 let test = filterLongWords(["cat", "dog", "elephant", "fish"], 4)
 
 console.log(test);
+
+function filterLongWordsUsingFilter(words, minLength){
+    return words.filter(currentWord => currentWord.length >= minLength);
+}
+
+let test2 = filterLongWordsUsingFilter(["cat", "dog", "elephant", "fish"], 4)
+test2;
+
+const funcionTest = (words, minLength) => words.filter(currentWord => currentWord.length >= minLength);
