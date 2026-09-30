@@ -8,3 +8,19 @@
  * Examples:filterLongWords(["sun", "star", "moon", "planet"], 5) -> ["planet"]
  * filterLongWords(["cat", "dog", "elephant", "fish"], 4) -> ["elephant", "fish"]
  */
+
+function filterLongWords(words, minLength) {
+    let array = [];
+
+    for (let i = 0; i < words.length; i++) {    // i++ is to start summing up and covering the array
+        if (words[i].length >= minLength) {
+            array.push(words[i]);
+        }
+    }
+    return array; // Justo fuera del scope del IF, pues si seguia dentro del scope del IF, cortaba el proceso
+}
+filterLongWords(["cat", "dog", "elephant", "fish"], 4)
+
+let test = filterLongWords(["cat", "dog", "elephant", "fish"], 4)
+
+console.log(test);
