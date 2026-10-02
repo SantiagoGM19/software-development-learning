@@ -33,3 +33,57 @@ let test2 = filterLongWordsUsingFilter(["cat", "dog", "elephant", "fish"], 4)
 test2;
 
 const funcionTest = (words, minLength) => words.filter(currentWord => currentWord.length >= minLength);
+
+
+
+/**
+ * EXERCISE: Raw Sensor Matrix Processor
+ * 
+ * SCENARIO:
+ * You receive rows of raw sensor telemetry. Each row is represented purely as an array:
+ * Schema per row: [sensorId, timestampHour, [reading1, reading2, ...], statusFlag]
+ *   - sensorId: Number
+ *   - timestampHour: Number (0-23)
+ *   - readings: Array of Numbers (Celsius)
+ *   - statusFlag: Number (1 = Active / Valid, 0 = Inactive / Error)
+ * 
+ * RULES:
+ * - Use ONLY JavaScript array methods (e.g., filter, map, reduce, every).
+ * - NO OBJECTS allowed anywhere (input, transformations, or final output).
+ * - Do not mutate the original input array.
+ * 
+ * REQUIREMENTS:
+ * 1. Filter Rows:
+ *    - Keep only rows where statusFlag === 1.
+ *    - Discard rows where the readings array is empty.
+ *    - Discard rows containing any hardware glitch (reading < -50).
+ * 
+ * 2. Transform Rows into a 4-element summary tuple:
+ *    - Index 0: sensorId as a string with a '#' prefix (e.g., "#101").
+ *    - Index 1: Average temperature rounded to 1 decimal place (Number).
+ *    - Index 2: Peak (maximum) temperature from that sensor's readings (Number).
+ *    - Index 3: Alert status label (String):
+ *        * "HIGH"   -> avg >= 30.0
+ *        * "NORMAL" -> 20.0 <= avg < 30.0
+ *        * "LOW"    -> avg < 20.0
+ * 
+ * EXPECTED OUTPUT:
+ * [
+ *   ["#101", 22.0, 23.5, "NORMAL"],
+ *   ["#104", 31.6, 33.0, "HIGH"],
+ *   ["#106", 28.5, 29.0, "NORMAL"]
+ * ]
+ */
+
+const rawSensorMatrix = [
+  [101, 14, [21.5, 22.0, 23.5, 21.0], 1],
+  [102,  3, [18.0, 19.5, 17.0], 0],          // Inactive (status 0)
+  [103, 11, [-999.0, 24.0, 25.0], 1],        // Glitch (-999)
+  [104,  8, [31.0, 32.5, 30.0, 33.0], 1],
+  [105, 16, [], 1],                          // Empty readings
+  [106, 22, [28.0, 29.0], 1],
+  [107, 19, [14.0, 15.0, 13.5], 0]           // Inactive (status 0)
+];
+
+function processTelemetry(matrix) {
+}
