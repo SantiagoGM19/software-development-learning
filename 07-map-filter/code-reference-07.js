@@ -31,7 +31,42 @@ function powerArray(array, exponent){
 
 console.log(powerArray(randomNumbers, 2));
 
-
 //every
+const areGraterThanOne = randomNumbers.every(number => (typeof number === 'number' && number > 1));
+areGraterThanOne;
+
+const areOddNumbers = randomNumbers.every(number => number%2 !== 0);
+areOddNumbers;
+
+//some
+const atLeastOneOdd = randomNumbers.some(number => number%2 !== 0);
+atLeastOneOdd;
 
 //reduce
+let count = 0; //previous
+while(count < 10){
+    count += 1; //current
+}
+count; //sumUp
+
+const sumUp = randomNumbers.reduce((acc, val) => acc + val, 0);
+sumUp;
+
+const person = {
+    name: 'Sebastian',
+    nit: '123456789',
+    role: 'sales',
+    scores: [2,5,6,10]
+}
+//person.name
+console.log(person['name']);
+
+const notes = [{title: 'A'}, {title: 'B'}, {title: 'C'}, {title: 'C'}, {title: 'C'}, {title: 'C'}, {title: 'C'}, {title: 'C'}];
+// -A-B-C
+const string = `${notes[0].title}-${notes[1].title}-${notes[2].title}`;
+string;
+
+//acc = "";
+// "" '-' title;
+const concat = notes.reduce((acc, val) => acc + '-' + val.title, "").slice(1);
+concat;
