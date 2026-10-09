@@ -70,3 +70,33 @@ string;
 // "" '-' title;
 const concat = notes.reduce((acc, val) => acc + '-' + val.title, "").slice(1);
 concat;
+
+
+//destructuring
+
+const fruits = ['Apple', 'Orange', 'Banana', 'Strawberry'];
+console.log(fruits[3]);
+
+//const apple = fruits[0];
+//const orange = fruits[1];
+
+const [apple, orange] = fruits;
+apple;
+orange;
+
+const [apple2, , , strawberry] = fruits;
+apple2;
+strawberry;
+
+
+//spread
+
+const randomNotes = ['Note 1', 'Note 2', 'Note 3', 'Note 4'];
+randomNotes.push('random');
+const randomNotesCopy = [...randomNotes];
+randomNotesCopy.push('Note 5');
+randomNotesCopy;
+randomNotes;
+
+const randomNotesCopy2 = [...randomNotes, 'Note 6', 'Note 7'];
+randomNotesCopy2;
