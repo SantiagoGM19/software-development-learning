@@ -86,4 +86,26 @@ const rawSensorMatrix = [
 ];
 
 function processTelemetry(matrix) {
+  return matrix.filter(([, , readings, statusFlag]) => {
+    const isActive = statusFlag === 1;
+    const hasReadings = readings.length > 0;
+    const hasNoGlitch = readings.every(reading => reading >= -50);
+    return isActive && hasReadings && hasNoGlitch;
+  })
+  .map(([id, , readings]) => {
+    const total = readings.reduce((acc, curr) => acc + curr, 0);
+    const avg = Number((total / readings.length).toFixed(1));
+    const peak = Math.max(...readings);
+
+    let alert = "LOW";
+    if (avg >= 30.0) {
+      alert = "HIGH";
+    } else if (avg >= 20.0) {
+      alert = "NORMAL";
+    }
+    return [`#${id}`, avg, peak, alert];
+  })
 }
+
+
+console.log(processTelemetry(rawSensorMatrix));

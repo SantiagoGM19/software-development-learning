@@ -10,3 +10,27 @@
  * Examples:
  * cleanUsernames(["Alex", "@Maria", "yo", "DEV_USER"]) -> ["@alex", "@maria", "invalid", "@dev_user"]
  */
+
+function cleanUsernames(usernames) {
+  let result = [];
+
+  for (let i = 0; i < usernames.length; i++) {
+    let name = usernames[i].toLowerCase();
+
+    // Remove leading '@' temporarily to check length cleanly
+    let rawName = name.startsWith("@") ? name.slice(1) : name;
+
+    if (rawName.length < 3) {
+      result.push("invalid");
+    } else {
+      let formatted = name.startsWith("@") ? name : "@" + name;
+      result.push(formatted);
+    }
+  }
+
+  return result;
+}
+
+// Test case
+console.log(cleanUsernames(["Alex", "@Maria", "yo", "DEV_USER"]));
+// Output: ["@alex", "@maria", "invalid", "@dev_user"]
