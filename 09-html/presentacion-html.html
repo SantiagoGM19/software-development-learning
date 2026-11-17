@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML: Fundamentos y Estructura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f141c;
+      --bg-card: #18202c;
+      --bg-card-hover: #202b3b;
+      --html-color: #f16529;
+      --css-color: #2965f1;
+      --js-color: #eab308;
+      --accent: #38bdf8;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-subtle: #2d3748;
+      --code-bg: #0b0f17;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    header.deck-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 20, 28, 0.95);
+      z-index: 10;
+    }
+
+    .badge-deck {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 1.2px;
+      color: var(--html-color);
+      background: rgba(241, 101, 41, 0.12);
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(241, 101, 41, 0.3);
+    }
+
+    .topic-indicator {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .slide-counter {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    main.deck-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 40px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(30px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      box-sizing: border-box;
+      max-width: 1240px;
+      margin: 0 auto;
+      right: 0;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+      z-index: 2;
+    }
+
+    .slide.prev {
+      transform: translateX(-30px);
+    }
+
+    .slide-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .slide-title {
+      font-size: 2.3rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .slide-title .highlight {
+      color: var(--html-color);
+    }
+
+    .slide-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 900px;
+      margin-bottom: 24px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+      width: 100%;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .code-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .code-header {
+      background: #141a24;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      margin: 0;
+      color: #e2e8f0;
+    }
+
+    .hl-tag { color: #f16529; font-weight: 600; }
+    .hl-attr { color: #38bdf8; }
+    .hl-val { color: #a3e635; }
+    .hl-content { color: #f8fafc; }
+    .hl-comment { color: #64748b; font-style: italic; }
+
+    .anatomy-box {
+      background: #0d121a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+
+    .anatomy-line {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.6rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .token-tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(241, 101, 41, 0.15);
+      border: 1px solid #f16529;
+      color: #f16529;
+    }
+
+    .token-attr {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+    }
+
+    .token-val {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(163, 230, 53, 0.15);
+      border: 1px solid #a3e635;
+      color: #a3e635;
+    }
+
+    .token-text {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid #94a3b8;
+      color: #ffffff;
+    }
+
+    .anatomy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      text-align: left;
+    }
+
+    .anatomy-item {
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border-left: 3px solid var(--border-subtle);
+      font-size: 0.85rem;
+    }
+
+    .anatomy-item.tag-part { border-left-color: #f16529; }
+    .anatomy-item.text-part { border-left-color: #ffffff; }
+    .anatomy-item.attr-part { border-left-color: #38bdf8; }
+
+    .anatomy-item-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .compare-box {
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .compare-good {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .compare-bad {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .dom-tree {
+      background: #0d121a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.9;
+    }
+
+    .tree-node {
+      display: block;
+      padding: 1px 6px;
+    }
+    .tree-lvl-0 { color: #f16529; font-weight: 600; }
+    .tree-lvl-1 { padding-left: 20px; color: #38bdf8; }
+    .tree-lvl-2 { padding-left: 40px; color: #eab308; }
+
+    .tag-chip {
+      display: inline-block;
+      font-family: 'Fira Code', monospace;
+      background: #1e293b;
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    footer.deck-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 28px;
+      background: rgba(15, 20, 28, 0.95);
+      border-top: 1px solid var(--border-subtle);
+      z-index: 10;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      background: #c2410c;
+      border-color: #c2410c;
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--html-color);
+      border-color: var(--html-color);
+    }
+
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .progress-bar-wrapper {
+      flex: 1;
+      max-width: 440px;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 20px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--html-color);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .keyboard-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .kbd {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="deck-header">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span class="badge-deck">HTML</span>
+      <span class="topic-indicator" id="topicIndicator">Estructura Web</span>
+    </div>
+    <div class="slide-counter" id="slideCounter">1 / 13</div>
+  </header>
+
+  <main class="deck-container">
+
+    <!-- SLIDE 1: Portada y Temario -->
+    <section class="slide active" data-topic="Estructura de la Clase">
+      <div class="slide-tag">Temario Técnico</div>
+      <h1 class="slide-title">HTML: Lenguaje de Marcado y Estructura</h1>
+      <p class="slide-subtitle">Contenidos de la sesión:</p>
+      
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-title">1. ¿Qué es HTML?</div>
+          <div class="card-desc">Definición técnica, analogía del esqueleto y relación con CSS y JavaScript.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Anatomía y Atributos</div>
+          <div class="card-desc">Sintaxis de apertura, contenido, cierre y modificadores clave.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Jerarquía</div>
+          <div class="card-desc">Anidamiento, árbol DOM, relaciones padre/hijo y regla LIFO.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">4. Etiquetas Principales</div>
+          <div class="card-desc">Estructura base, texto, contenedores, enlaces y semántica.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Definición y Analogía del Esqueleto -->
+    <section class="slide" data-topic="1. ¿Qué es HTML?">
+      <div class="slide-tag">1. Definición Conceptual</div>
+      <h2 class="slide-title">¿Qué es HTML? <span class="highlight">La Analogía del Esqueleto</span></h2>
+      <p class="slide-subtitle">HTML define la estructura y el contenido de un documento web. En la arquitectura web, cada tecnología cumple una función exclusiva:</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 3px solid var(--html-color);">
+          <div class="card-title" style="color: var(--html-color);">HTML (Esqueleto)</div>
+          <div class="card-desc">
+            <strong>Estructura y contenido.</strong> Define los elementos (títulos, párrafos, tablas, contenedores) y su orden jerárquico. Sin HTML no existe documento ni contenido que representar.
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 3px solid var(--css-color);">
+          <div class="card-title" style="color: var(--css-color);">CSS (Piel y Ropa)</div>
+          <div class="card-desc">
+            <strong>Presentación visual.</strong> Controla colores, tipografías, márgenes, dimensiones y disposición espacial (layout).
+          </div>
+        </div>
+
+        <div class="card" style="border-top: 3px solid var(--js-color);">
+          <div class="card-title" style="color: var(--js-color);">JavaScript (Músculos y Nervios)</div>
+          <div class="card-desc">
+            <strong>Comportamiento dinámico.</strong> Maneja eventos del usuario, manipulación del DOM, validaciones y peticiones al servidor.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 12px 18px; background: rgba(241,101,41,0.08); border-radius: 8px; border-left: 3px solid var(--html-color); font-size: 0.9rem; color: #cbd5e1;">
+        <strong>Principio de separación de responsabilidades:</strong> HTML nunca debe usarse para dar estilos visuales ni lógica computacional; su única función es semántica y estructural.
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Significado de la sigla HTML -->
+    <section class="slide" data-topic="1. ¿Qué es HTML?">
+      <div class="slide-tag">1. Definición Técnica</div>
+      <h2 class="slide-title">Significado de las Siglas <span class="highlight">HTML</span></h2>
+      <p class="slide-subtitle"><strong>H</strong>yper<strong>T</strong>ext <strong>M</strong>arkup <strong>L</strong>anguage (Lenguaje de Marcado de Hipertexto).</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="tag-chip">HyperText (Hipertexto)</div>
+          <p class="card-desc" style="font-size: 0.92rem; line-height: 1.6;">
+            Texto estructurado con referencias cruzadas (enlaces o hipervínculos) que permiten conectar documentos entre sí de forma no lineal a través de la web.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="tag-chip" style="color: #a3e635;">Markup Language (Lenguaje de Marcado)</div>
+          <p class="card-desc" style="font-size: 0.92rem; line-height: 1.6;">
+            Conjunto de etiquetas estandarizadas que delimitan y clasifican los fragmentos de un texto. <strong>No es un lenguaje de programación:</strong> no procesa algoritmos, no ejecuta bucles ni almacena variables en memoria.
+          </p>
+        </div>
+      </div>
+
+      <div class="code-box" style="margin-top: 20px;">
+        <div class="code-header">Diferencia: Texto sin formato vs Texto con Marcado Semántico</div>
+        <pre><code><span class="hl-comment">&lt;!-- Texto plano sin marcado (el navegador no conoce la función de cada línea) --&gt;</span>
+Manual de Usuario. Descargue el archivo aqui.
+
+<span class="hl-comment">&lt;!-- Con marcado HTML (el navegador interpreta la jerarquía y el tipo de dato) --&gt;</span>
+<span class="hl-tag">&lt;h1&gt;</span>Manual de Usuario<span class="hl-tag">&lt;/h1&gt;</span>
+<span class="hl-tag">&lt;p&gt;</span>Descargue el archivo <span class="hl-tag">&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"manual.pdf"</span><span class="hl-tag">&gt;</span>aquí<span class="hl-tag">&lt;/a&gt;</span>.<span class="hl-tag">&lt;/p&gt;</span></code></pre>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Anatomía de una Etiqueta -->
+    <section class="slide" data-topic="2. Anatomía de una Etiqueta">
+      <div class="slide-tag">2. Sintaxis</div>
+      <h2 class="slide-title">Anatomía de una <span class="highlight">Etiqueta HTML</span></h2>
+      <p class="slide-subtitle">Un elemento HTML estándar está compuesto por tres partes formales:</p>
+
+      <div class="anatomy-box">
+        <div class="anatomy-line">
+          <span class="token-tag">&lt;p&gt;</span>
+          <span class="token-text">Texto de ejemplo</span>
+          <span class="token-tag">&lt;/p&gt;</span>
+        </div>
+
+        <div class="anatomy-grid">
+          <div class="anatomy-item tag-part">
+            <div class="anatomy-item-title" style="color: #f16529;">1. Etiqueta de Apertura</div>
+            <div class="card-desc">Delimitada por <code>&lt;</code> y <code>&gt;</code>. Indica el inicio del elemento y su tipo semántico.</div>
+          </div>
+          <div class="anatomy-item text-part">
+            <div class="anatomy-item-title">2. Contenido</div>
+            <div class="card-desc">Información contenida (texto, datos u otros elementos anidados).</div>
+          </div>
+          <div class="anatomy-item tag-part">
+            <div class="anatomy-item-title" style="color: #f16529;">3. Etiqueta de Cierre</div>
+            <div class="card-desc">Delimitada por <code>&lt;/</code> y <code>&gt;</code>. La barra inclinada señala el fin del elemento.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+        <strong>Definición técnica:</strong> El conjunto completo formado por la etiqueta de apertura, el contenido y la etiqueta de cierre se denomina formalmente <strong>Elemento HTML</strong>.
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Atributos -->
+    <section class="slide" data-topic="2. Atributos">
+      <div class="slide-tag">2. Sintaxis</div>
+      <h2 class="slide-title">Estructura de los <span class="highlight">Atributos</span></h2>
+      <p class="slide-subtitle">Los atributos proporcionan metadatos, parámetros de configuración o identificadores a la etiqueta. Se ubican exclusivamente en la <strong>etiqueta de apertura</strong> con la sintaxis <code>nombre="valor"</code>.</p>
+
+      <div class="anatomy-box">
+        <div class="anatomy-line" style="font-size: 1.45rem;">
+          <span class="token-tag">&lt;a</span>
+          <span class="token-attr">href</span><span style="color:#94a3b8;">=</span><span class="token-val">"https://w3.org"</span>
+          <span class="token-attr">target</span><span style="color:#94a3b8;">=</span><span class="token-val">"_blank"</span><span class="token-tag">&gt;</span>
+          <span class="token-text">W3C</span>
+          <span class="token-tag">&lt;/a&gt;</span>
+        </div>
+
+        <div class="anatomy-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="anatomy-item attr-part">
+            <div class="anatomy-item-title" style="color: #38bdf8;">Nombre del Atributo</div>
+            <div class="card-desc">Identificador estándar que define la propiedad a configurar (<code>href</code>, <code>src</code>, <code>class</code>).</div>
+          </div>
+          <div class="anatomy-item" style="border-left-color: #a3e635;">
+            <div class="anatomy-item-title" style="color: #a3e635;">Valor del Atributo</div>
+            <div class="card-desc">Dato asignado a la propiedad. Se encierra siempre entre comillas dobles <code>"..."</code>.</div>
+          </div>
+          <div class="anatomy-item tag-part">
+            <div class="anatomy-item-title" style="color: #f16529;">Etiqueta de Cierre</div>
+            <div class="card-desc">Las etiquetas de cierre nunca contienen atributos.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 10px;">
+        <div class="card" style="padding: 14px;">
+          <code style="color: var(--accent);">id="identificador"</code>
+          <div class="card-desc" style="margin-top: 4px;">Identificador único por documento.</div>
+        </div>
+        <div class="card" style="padding: 14px;">
+          <code style="color: var(--accent);">class="nombre-clase"</code>
+          <div class="card-desc" style="margin-top: 4px;">Clasificador reutilizable para CSS y JS.</div>
+        </div>
+        <div class="card" style="padding: 14px;">
+          <code style="color: var(--accent);">title="texto"</code>
+          <div class="card-desc" style="margin-top: 4px;">Información contextual (tooltip nativo).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Elementos Vacíos (Void Elements) -->
+    <section class="slide" data-topic="2. Elementos Vacíos">
+      <div class="slide-tag">2. Sintaxis</div>
+      <h2 class="slide-title">Elementos Vacíos <span class="highlight">(Void Elements)</span></h2>
+      <p class="slide-subtitle">Determinadas etiquetas carecen por definición de contenido textual interno y de etiqueta de cierre. Su comportamiento está regido completamente por sus atributos o por su posición.</p>
+
+      <div class="grid-2">
+        <div class="code-box">
+          <div class="code-header">Elementos Vacíos Frecuentes</div>
+          <pre><code><span class="hl-comment">&lt;!-- Imagen: la fuente se define por src --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"diagrama.png"</span> <span class="hl-attr">alt</span>=<span class="hl-val">"Diagrama de red"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-comment">&lt;!-- Campo de entrada de formulario --&gt;</span>
+<span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"text"</span> <span class="hl-attr">name</span>=<span class="hl-val">"usuario"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-comment">&lt;!-- Salto de línea forzado --&gt;</span>
+<span class="hl-tag">&lt;br&gt;</span>
+
+<span class="hl-comment">&lt;!-- Separador temático horizontal --&gt;</span>
+<span class="hl-tag">&lt;hr&gt;</span>
+
+<span class="hl-comment">&lt;!-- Metadato en la cabecera --&gt;</span>
+<span class="hl-tag">&lt;meta</span> <span class="hl-attr">charset</span>=<span class="hl-val">"UTF-8"</span><span class="hl-tag">&gt;</span></code></pre>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="card">
+            <div class="card-title">Comportamiento en HTML5</div>
+            <div class="card-desc">
+              En HTML5, la barra de cierre final (<code>&lt;img /&gt;</code>) es prescindible. Ambas formas son procesadas por el motor del navegador, pero el estándar actual recomienda la sintaxis limpia sin barra: <code>&lt;img&gt;</code>.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Diferencia con elementos normales</div>
+            <div class="card-desc">
+              No admiten elementos hijos ni cadenas de texto dentro de ellos; son representados directamente por el navegador según el tipo de elemento.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Jerarquía y Árbol DOM -->
+    <section class="slide" data-topic="3. Jerarquía y Anidamiento">
+      <div class="slide-tag">3. Estructura Jerárquica</div>
+      <h2 class="slide-title">Jerarquía y <span class="highlight">Árbol DOM</span></h2>
+      <p class="slide-subtitle">Un documento HTML se organiza como una estructura de datos en árbol (DOM: Document Object Model). Las etiquetas anidadas establecen relaciones de parentesco precisas:</p>
+
+      <div class="grid-2">
+        <div class="dom-tree">
+          <span class="tree-node tree-lvl-0">&lt;section&gt; <span style="color: #64748b;">// Padre de h2 y p</span></span>
+          <span class="tree-node tree-lvl-1">&lt;h2&gt; <span style="color: #64748b;">// Hijo de section, hermano de p</span></span>
+          <span class="tree-node tree-lvl-2">Capítulo 1</span>
+          <span class="tree-node tree-lvl-1">&lt;/h2&gt;</span>
+          <span class="tree-node tree-lvl-1">&lt;p&gt; <span style="color: #64748b;">// Hijo de section, hermano de h2</span></span>
+          <span class="tree-node tree-lvl-2">Texto con un enlace <span style="color: #f16529;">&lt;a&gt;</span>aquí<span style="color: #f16529;">&lt;/a&gt;</span></span>
+          <span class="tree-node tree-lvl-1">&lt;/p&gt;</span>
+          <span class="tree-node tree-lvl-0">&lt;/section&gt;</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="card">
+            <div class="card-title">Nodo Padre (Parent)</div>
+            <div class="card-desc">Elemento que envuelve directamente a otro elemento. En el ejemplo: <code>&lt;section&gt;</code> es padre de <code>&lt;h2&gt;</code> y de <code>&lt;p&gt;</code>.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Nodo Hijo (Child)</div>
+            <div class="card-desc">Elemento contenido dentro de otro. <code>&lt;a&gt;</code> es hijo de <code>&lt;p&gt;</code> y descendiente de <code>&lt;section&gt;</code>.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Nodos Hermanos (Siblings)</div>
+            <div class="card-desc">Elementos que comparten el mismo padre directo en el mismo nivel: <code>&lt;h2&gt;</code> y <code>&lt;p&gt;</code>.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Regla de Anidamiento LIFO -->
+    <section class="slide" data-topic="3. Jerarquía y Anidamiento">
+      <div class="slide-tag">3. Sintaxis y Errores</div>
+      <h2 class="slide-title">Regla de Anidamiento: <span class="highlight">Cierre LIFO</span></h2>
+      <p class="slide-subtitle"><strong>Last In, First Out (Último en entrar, primero en salir):</strong> La última etiqueta en abrirse debe ser obligatoriamente la primera en cerrarse. Las etiquetas nunca deben cruzarse.</p>
+
+      <div class="grid-2">
+        <div class="compare-box compare-good">
+          <div style="font-weight: 700; color: var(--success); font-size: 1rem;">
+            Sintaxis Correcta
+          </div>
+          <div class="code-box">
+            <pre><code><span class="hl-tag">&lt;p&gt;</span>
+  Texto con formato <span class="hl-tag">&lt;strong&gt;</span>destacado<span class="hl-tag">&lt;/strong&gt;</span>.
+<span class="hl-tag">&lt;/p&gt;</span></code></pre>
+          </div>
+          <div class="card-desc">
+            <code>&lt;strong&gt;</code> está completamente contenido dentro de <code>&lt;p&gt;</code> y se cierra antes que este.
+          </div>
+        </div>
+
+        <div class="compare-box compare-bad">
+          <div style="font-weight: 700; color: var(--danger); font-size: 1rem;">
+            Sintaxis Incorrecta (Etiquetas solapadas)
+          </div>
+          <div class="code-box">
+            <pre><code><span class="hl-tag">&lt;p&gt;</span>
+  Texto con formato <span class="hl-tag">&lt;strong&gt;</span>destacado<span class="hl-tag">&lt;/p&gt;</span>
+<span class="hl-tag">&lt;/strong&gt;</span>  <span class="hl-comment">&lt;!-- Error de jerarquía --&gt;</span></code></pre>
+          </div>
+          <div class="card-desc">
+            Rompe el árbol del DOM. Aunque el navegador intenta corregirlo automáticamente, provoca inconsistencias en estilos CSS y manipulación con JavaScript.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; padding: 10px 16px; background: rgba(56, 189, 248, 0.08); border-radius: 8px; border-left: 3px solid var(--accent); font-size: 0.88rem; color: #cbd5e1;">
+        <strong>Indentación:</strong> El uso sistemático de sangría (2 espacios por nivel de profundidad) refleja visualmente la jerarquía del DOM y previene errores de anidamiento.
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Estructura Base de un Documento -->
+    <section class="slide" data-topic="4. Estructura Base">
+      <div class="slide-tag">4. Estructura de Archivo</div>
+      <h2 class="slide-title">Estructura Global del <span class="highlight">Documento HTML</span></h2>
+      <p class="slide-subtitle">Todo archivo HTML5 válido requiere cuatro bloques estructurales mínimos:</p>
+
+      <div class="grid-2">
+        <div class="code-box">
+          <div class="code-header">index.html (Estructura Estándar)</div>
+          <pre><code><span class="hl-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="hl-tag">&lt;html</span> <span class="hl-attr">lang</span>=<span class="hl-val">"es"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;head&gt;</span>
+    <span class="hl-tag">&lt;meta</span> <span class="hl-attr">charset</span>=<span class="hl-val">"UTF-8"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;meta</span> <span class="hl-attr">name</span>=<span class="hl-val">"viewport"</span> <span class="hl-attr">content</span>=<span class="hl-val">"width=device-width, initial-scale=1.0"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;title&gt;</span>Título de la Página<span class="hl-tag">&lt;/title&gt;</span>
+  <span class="hl-tag">&lt;/head&gt;</span>
+  <span class="hl-tag">&lt;body&gt;</span>
+    <span class="hl-tag">&lt;h1&gt;</span>Encabezado visible<span class="hl-tag">&lt;/h1&gt;</span>
+    <span class="hl-tag">&lt;p&gt;</span>Contenido renderizado en pantalla.<span class="hl-tag">&lt;/p&gt;</span>
+  <span class="hl-tag">&lt;/body&gt;</span>
+<span class="hl-tag">&lt;/html&gt;</span></code></pre>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="card" style="padding: 12px 16px;">
+            <div style="font-weight: 700; color: var(--accent); font-size: 0.9rem;">&lt;!DOCTYPE html&gt;</div>
+            <div class="card-desc">Indica al motor del navegador que el documento sigue la especificación HTML5 (evita el modo quirks).</div>
+          </div>
+          <div class="card" style="padding: 12px 16px;">
+            <div style="font-weight: 700; color: #a3e635; font-size: 0.9rem;">&lt;html lang="es"&gt;</div>
+            <div class="card-desc">Elemento raíz que envuelve la totalidad del documento. Define el idioma para motores de búsqueda y lectores de pantalla.</div>
+          </div>
+          <div class="card" style="padding: 12px 16px;">
+            <div style="font-weight: 700; color: #eab308; font-size: 0.9rem;">&lt;head&gt;</div>
+            <div class="card-desc">Cabecera de metadatos (codificación UTF-8, viewport para dispositivos móviles, enlaces a hojas de estilo, título de pestaña). No es visible directamente en el viewport.</div>
+          </div>
+          <div class="card" style="padding: 12px 16px;">
+            <div style="font-weight: 700; color: var(--html-color); font-size: 0.9rem;">&lt;body&gt;</div>
+            <div class="card-desc">Cuerpo del documento. Contiene todos los elementos visuales y de interacción que el navegador renderiza al usuario.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Etiquetas de Texto y Encabezados -->
+    <section class="slide" data-topic="4. Etiquetas Más Comunes">
+      <div class="slide-tag">4. Elementos de Texto</div>
+      <h2 class="slide-title">Etiquetas de <span class="highlight">Texto y Encabezados</span></h2>
+      <p class="slide-subtitle">Elementos destinados al marcado de información textual y estructuración de contenidos:</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="tag-chip">Encabezados Jerárquicos (&lt;h1&gt; a &lt;h6&gt;)</div>
+          <div class="card-desc" style="margin-bottom: 10px;">
+            Establecen niveles de importancia estructural, no meramente tamaños de fuente:
+          </div>
+          <div class="code-box">
+            <pre><code><span class="hl-tag">&lt;h1&gt;</span>Título principal (uno por documento)<span class="hl-tag">&lt;/h1&gt;</span>
+<span class="hl-tag">&lt;h2&gt;</span>Sección principal<span class="hl-tag">&lt;/h2&gt;</span>
+<span class="hl-tag">&lt;h3&gt;</span>Subsección temática<span class="hl-tag">&lt;/h3&gt;</span>
+<span class="hl-comment">&lt;!-- &lt;h4&gt;, &lt;h5&gt;, &lt;h6&gt; según profundidad --&gt;</span></code></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag-chip" style="color: #a3e635;">Párrafos y Marcado en Línea</div>
+          <div class="card-desc" style="margin-bottom: 10px;">
+            Diferencian bloques de lectura y fragmentos con significado específico:
+          </div>
+          <div class="code-box">
+            <pre><code><span class="hl-tag">&lt;p&gt;</span>Bloque de párrafo estándar.<span class="hl-tag">&lt;/p&gt;</span>
+<span class="hl-tag">&lt;strong&gt;</span>Importancia grave o alerta (negrita semántica)<span class="hl-tag">&lt;/strong&gt;</span>
+<span class="hl-tag">&lt;em&gt;</span>Énfasis tonal (cursiva semántica)<span class="hl-tag">&lt;/em&gt;</span>
+<span class="hl-tag">&lt;span&gt;</span>Contenedor en línea genérico sin valor semántico<span class="hl-tag">&lt;/span&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px; font-size: 0.88rem; color: var(--text-muted);">
+        <strong>Criterio técnico:</strong> Nunca use <code>&lt;h1&gt;</code> para agrandar texto o <code>&lt;strong&gt;</code> solo por estética visual; para fines visuales debe usarse CSS (<code>font-size</code>, <code>font-weight</code>).
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Listas y Enlaces -->
+    <section class="slide" data-topic="4. Listas y Enlaces">
+      <div class="slide-tag">4. Organización y Conexión</div>
+      <h2 class="slide-title">Listas y <span class="highlight">Enlaces</span></h2>
+      <p class="slide-subtitle">Mecanismos para agrupar elementos ordenados o no ordenados y para conectar recursos web.</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="tag-chip" style="color: #c084fc;">Listas (&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;)</div>
+          <div class="card-desc" style="margin-bottom: 8px;">
+            El elemento <code>&lt;li&gt;</code> (list item) solo es válido como hijo directo de <code>&lt;ul&gt;</code> u <code>&lt;ol&gt;</code>:
+          </div>
+          <div class="code-box">
+            <pre><code><span class="hl-comment">&lt;!-- Lista no ordenada (viñetas) --&gt;</span>
+<span class="hl-tag">&lt;ul&gt;</span>
+  <span class="hl-tag">&lt;li&gt;</span>Elemento A<span class="hl-tag">&lt;/li&gt;</span>
+  <span class="hl-tag">&lt;li&gt;</span>Elemento B<span class="hl-tag">&lt;/li&gt;</span>
+<span class="hl-tag">&lt;/ul&gt;</span>
+
+<span class="hl-comment">&lt;!-- Lista ordenada (secuencial numerada) --&gt;</span>
+<span class="hl-tag">&lt;ol&gt;</span>
+  <span class="hl-tag">&lt;li&gt;</span>Primer paso<span class="hl-tag">&lt;/li&gt;</span>
+  <span class="hl-tag">&lt;li&gt;</span>Segundo paso<span class="hl-tag">&lt;/li&gt;</span>
+<span class="hl-tag">&lt;/ol&gt;</span></code></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag-chip">Enlaces Hipertexto (&lt;a&gt;)</div>
+          <div class="card-desc" style="margin-bottom: 8px;">
+            Permite la navegación interna, externa o mediante protocolos de red:
+          </div>
+          <div class="code-box">
+            <pre><code><span class="hl-comment">&lt;!-- Enlace externo en pestaña nueva con seguridad rel --&gt;</span>
+<span class="hl-tag">&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"https://developer.mozilla.org"</span> 
+   <span class="hl-attr">target</span>=<span class="hl-val">"_blank"</span> 
+   <span class="hl-attr">rel</span>=<span class="hl-val">"noopener noreferrer"</span><span class="hl-tag">&gt;</span>MDN Docs<span class="hl-tag">&lt;/a&gt;</span>
+
+<span class="hl-comment">&lt;!-- Enlace relativo interno --&gt;</span>
+<span class="hl-tag">&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"/perfil/configuracion.html"</span><span class="hl-tag">&gt;</span>Ajustes<span class="hl-tag">&lt;/a&gt;</span>
+
+<span class="hl-comment">&lt;!-- Enlace a sección por ID interno (ancla) --&gt;</span>
+<span class="hl-tag">&lt;a</span> <span class="hl-attr">href</span>=<span class="hl-val">"#seccion-2"</span><span class="hl-tag">&gt;</span>Ir a Sección 2<span class="hl-tag">&lt;/a&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: Multimedia y Formularios -->
+    <section class="slide" data-topic="4. Multimedia y Formularios">
+      <div class="slide-tag">4. Interacción y Recursos Externos</div>
+      <h2 class="slide-title">Multimedia y <span class="highlight">Formularios</span></h2>
+      <p class="slide-subtitle">Incrustación de recursos externos y captura de datos del usuario:</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="tag-chip" style="color: #a3e635;">Recursos Multimedia (&lt;img&gt;, &lt;video&gt;)</div>
+          <div class="code-box" style="margin-top: 6px;">
+            <pre><code><span class="hl-comment">&lt;!-- Imagen con atributo alt obligatorio para accesibilidad y SEO --&gt;</span>
+<span class="hl-tag">&lt;img</span> <span class="hl-attr">src</span>=<span class="hl-val">"servidor.jpg"</span> <span class="hl-attr">alt</span>=<span class="hl-val">"Servidor rack en centro de datos"</span><span class="hl-tag">&gt;</span>
+
+<span class="hl-comment">&lt;!-- Reproductor de video nativo --&gt;</span>
+<span class="hl-tag">&lt;video</span> <span class="hl-attr">controls</span> <span class="hl-attr">width</span>=<span class="hl-val">"640"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;source</span> <span class="hl-attr">src</span>=<span class="hl-val">"clase.mp4"</span> <span class="hl-attr">type</span>=<span class="hl-val">"video/mp4"</span><span class="hl-tag">&gt;</span>
+<span class="hl-tag">&lt;/video&gt;</span></code></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag-chip" style="color: #c084fc;">Entrada de Datos (&lt;form&gt;, &lt;input&gt;, &lt;button&gt;)</div>
+          <div class="code-box" style="margin-top: 6px;">
+            <pre><code><span class="hl-tag">&lt;form</span> <span class="hl-attr">action</span>=<span class="hl-val">"/api/registro"</span> <span class="hl-attr">method</span>=<span class="hl-val">"POST"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;label</span> <span class="hl-attr">for</span>=<span class="hl-val">"email"</span><span class="hl-tag">&gt;</span>Correo electrónico:<span class="hl-tag">&lt;/label&gt;</span>
+  <span class="hl-tag">&lt;input</span> <span class="hl-attr">type</span>=<span class="hl-val">"email"</span> <span class="hl-attr">id</span>=<span class="hl-val">"email"</span> <span class="hl-attr">name</span>=<span class="hl-val">"email"</span> <span class="hl-attr">required</span><span class="hl-tag">&gt;</span>
+
+  <span class="hl-tag">&lt;button</span> <span class="hl-attr">type</span>=<span class="hl-val">"submit"</span><span class="hl-tag">&gt;</span>Enviar<span class="hl-tag">&lt;/button&gt;</span>
+<span class="hl-tag">&lt;/form&gt;</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">
+        <strong>Asociación semántica:</strong> El atributo <code>for</code> de <code>&lt;label&gt;</code> debe coincidir exactamente con el <code>id</code> del <code>&lt;input&gt;</code> para permitir enfoque al hacer clic y compatibilidad con tecnologías de asistencia.
+      </div>
+    </section>
+
+    <!-- SLIDE 13: HTML Semántico Moderno -->
+    <section class="slide" data-topic="4. HTML Semántico">
+      <div class="slide-tag">4. Estructuración Semántica</div>
+      <h2 class="slide-title">HTML Semántico: <span class="highlight">Contenedores Estructurales</span></h2>
+      <p class="slide-subtitle">Sustitución de contenedores genéricos (<code>&lt;div&gt;</code>) por etiquetas descriptivas que expresan el rol arquitectónico de cada bloque:</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="tag-chip">&lt;header&gt; & &lt;nav&gt;</div>
+          <div class="card-desc">
+            <strong>&lt;header&gt;:</strong> Bloque introductorio o cabecera de la página o de una sección.<br><br>
+            <strong>&lt;nav&gt;:</strong> Contenedor reservado exclusivamente para bloques de enlaces de navegación principal.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag-chip" style="color: #a3e635;">&lt;main&gt;, &lt;section&gt;, &lt;article&gt;</div>
+          <div class="card-desc">
+            <strong>&lt;main&gt;:</strong> Contenido central y exclusivo del documento (único por página).<br><br>
+            <strong>&lt;section&gt;:</strong> Sección temática genérica con encabezado propio.<br><br>
+            <strong>&lt;article&gt;:</strong> Contenido autónomo y redistribuible por sí mismo.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag-chip" style="color: #c084fc;">&lt;aside&gt; & &lt;footer&gt;</div>
+          <div class="card-desc">
+            <strong>&lt;aside&gt;:</strong> Contenido tangencial o complementario (barras laterales, glosarios).<br><br>
+            <strong>&lt;footer&gt;:</strong> Pie de página o de sección (información de autoría, derechos, enlaces legales).
+          </div>
+        </div>
+      </div>
+
+      <div class="code-box" style="margin-top: 14px;">
+        <div class="code-header">Comparación: Maquetación no semántica vs Maquetación semántica</div>
+        <pre><code><span class="hl-comment">&lt;!-- No semántico (todo es un contenedor genérico div) --&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">id</span>=<span class="hl-val">"cabecera"</span><span class="hl-tag">&gt;</span>...<span class="hl-tag">&lt;/div&gt;</span>  <span class="hl-tag">&lt;div</span> <span class="hl-attr">id</span>=<span class="hl-val">"cuerpo"</span><span class="hl-tag">&gt;</span>...<span class="hl-tag">&lt;/div&gt;</span>  <span class="hl-tag">&lt;div</span> <span class="hl-attr">id</span>=<span class="hl-val">"pie"</span><span class="hl-tag">&gt;</span>...<span class="hl-tag">&lt;/div&gt;</span>
+
+<span class="hl-comment">&lt;!-- Semántico estándar HTML5 --&gt;</span>
+<span class="hl-tag">&lt;header&gt;</span>...<span class="hl-tag">&lt;/header&gt;</span>       <span class="hl-tag">&lt;main&gt;</span>...<span class="hl-tag">&lt;/main&gt;</span>         <span class="hl-tag">&lt;footer&gt;</span>...<span class="hl-tag">&lt;/footer&gt;</span></code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="deck-footer">
+    <div class="keyboard-hint">
+      Teclas: <span class="kbd">←</span> <span class="kbd">→</span> / <span class="kbd">Espacio</span> | Pantalla completa: <span class="kbd">F</span>
+    </div>
+
+    <div class="progress-bar-wrapper">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+
+    <div class="controls-group">
+      <button class="btn" id="prevBtn">Anterior</button>
+      <button class="btn btn-primary" id="nextBtn">Siguiente</button>
+    </div>
+  </footer>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const slideCounter = document.getElementById('slideCounter');
+    const topicIndicator = document.getElementById('topicIndicator');
+    const progressBar = document.getElementById('progressBar');
+
+    let currentSlide = 0;
+
+    function updateDeck() {
+      slides.forEach((slide, idx) => {
+        slide.classList.remove('active', 'prev');
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else if (idx < currentSlide) {
+          slide.classList.add('prev');
+        }
+      });
+
+      const total = slides.length;
+      slideCounter.textContent = `${currentSlide + 1} / ${total}`;
+      const percent = ((currentSlide + 1) / total) * 100;
+      progressBar.style.width = `${percent}%`;
+
+      const currentTopic = slides[currentSlide].getAttribute('data-topic') || 'Contenido';
+      topicIndicator.textContent = currentTopic;
+
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === total - 1;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    });
+
+    updateDeck();
+  </script>
+</body>
+</html>
